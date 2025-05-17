@@ -1,0 +1,15 @@
+[package]
+name = "inventory_kit"
+version = "0.1.0"
+edition = "2024"
+authors = ["Jerry Maheswara <jerrymaheswara@gmail.com>"]
+description = "A modular toolkit for managing and grouping dynamic data inventories."
+license = "Apache-2.0"
+repository = "https://github.com/jerry-maheswara-github/inventory_kit"
+documentation = "https://docs.rs/inventory_kit"
+readme = "README.md"
+keywords = ["inventory", "integration", "callback"]
+categories = ["web-programming"]
+
+[dependencies]
+thiserror = "2.0.12"
