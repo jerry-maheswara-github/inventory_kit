@@ -1,33 +1,3 @@
-# inventory_kit
-
-**A powerful Rust toolkit for dynamic inventory management and integration.**
-
-`inventory_kit` is a flexible, composable inventory management framework for Rust. It supports availability tracking, time-slot-based reservations, and structured extensibility through traits and generic types.
-
-## ✅ Features
-
-- 📦 Generic inventory system via `InventoryItem` trait
-- ⏱️ Time-slot-based availability via `AvailabilitySlot`
-- 🧠 Abstractions via `InventoryRepository` and `AtomicInventoryOps` traits
-- 🗂️ In-memory implementation ready to use
-- ⚠️ Typed error handling with `InventoryError`
-
----
-
-## 📦 Use Case
-
-Ideal for applications needing availability tracking or reservations, such as:
-
-- Booking systems (rooms, rentals, events)
-- Inventory-based games
-- Product stock availability with time windows
-- Scheduling of shared resources
-
----
-
-## ✨ Quick Start
-
-```rust
 use inventory_kit::error::InventoryError;
 use inventory_kit::in_memory::InMemoryInventoryRepository;
 use inventory_kit::model::InventoryItem;
@@ -81,32 +51,3 @@ fn main() -> Result<(), InventoryError> {
 
     Ok(())
 }
-```
-
----
-
-## 📄 License
-
-Licensed under the [Apache-2.0 license](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
----
-
-## 👨 Author
-
-Jerry Maheswara <jerrymaheswara@gmail.com>
-
----
-
-## ❤️ Built with Love in Rust
-
-This project is built with ❤️ using **Rust** — a systems programming language that is safe, fast, and concurrent.  
-Rust is the perfect choice for building reliable and efficient applications.
-
----
-
-## 🤝 Contributing
-
-Pull requests, issues, and feedback are welcome!  
-If you find this crate useful, give it a ⭐ and share it with others in the Rustacean community.
-
----
