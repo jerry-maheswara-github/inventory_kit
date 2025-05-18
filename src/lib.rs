@@ -49,7 +49,7 @@
 //!     let start_time = 10_00;
 //!     let end_time = 20_00;
 //! 
-//!     repo.insert_availability(1, start_time, end_time, 5);
+//!     let  _ = repo.insert_availability(1, start_time, end_time, 5);
 //!     print!("repo.insert_availability 5 (available:5) \n{:#?}\n", repo);
 //!     
 //!     match repo.reserve(&1, start_time, end_time, 3) {
