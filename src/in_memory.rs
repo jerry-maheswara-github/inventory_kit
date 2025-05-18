@@ -14,7 +14,7 @@ use crate::utils::validate_time_range;
 pub struct InMemoryInventoryRepository<Item, Time>
 where
     Item: InventoryItem,
-    Time: Copy + Ord + Hash + Eq,
+    Time: Copy + Ord + Hash + Eq, u32: From<Time>
 {
     storage: HashMap<Item::Id, Vec<AvailabilitySlot<Item::Id, Time>>>,
 }
@@ -22,7 +22,7 @@ where
 impl<Item, Time> InMemoryInventoryRepository<Item, Time>
 where
     Item: InventoryItem,
-    Time: Copy + Ord + Hash + Eq,
+    Time: Copy + Ord + Hash + Eq, u32: From<Time> 
 {
     /// Creates a new, empty in-memory inventory repository.
     pub fn new() -> Self {
@@ -40,7 +40,8 @@ where
     /// - `from`: Start of the availability period.
     /// - `to`: End of the availability period.
     /// - `quantity`: Number of available units.
-    pub fn insert_availability(&mut self, item_id: Item::Id, from: Time, to: Time, quantity: u32) {
+    pub fn insert_availability(&mut self, item_id: Item::Id, from: Time, to: Time, quantity: u32) -> Result<(), InventoryError> {
+        validate_time_range(from, to)?;
         let slots = self.storage.entry(item_id.clone()).or_default();
         slots.push(AvailabilitySlot {
             item_id,
@@ -48,6 +49,7 @@ where
             end: to,
             available: quantity,
         });
+        Ok(())
     }
 
     /// Finds a mutable reference to an availability slot.
@@ -68,7 +70,7 @@ where
 {
     /// Retrieves available slots for a specific item between a given time range.
     fn get_availability(&self, item_id: &Item::Id, from: Time, to: Time) -> Result<Vec<AvailabilitySlot<Item::Id, Time>>, InventoryError> {
-        validate_time_range::<Time>(from.into(), to.into())?;
+        validate_time_range(from, to)?;
         let slots = self.storage.get(item_id).ok_or(InventoryError::NotFound)?;
         let result = slots.iter()
             .filter(|s| s.start >= from && s.end <= to)
@@ -90,6 +92,7 @@ where
 
     /// Releases a quantity of items back to the slot.
     fn release(&mut self, item_id: &Item::Id, from: Time, to: Time, quantity: u32) -> Result<(), InventoryError> {
+        validate_time_range(from, to)?;
         let slot = self.find_slot_mut(item_id, from, to).ok_or(InventoryError::NotFound)?;
         slot.available += quantity;
         Ok(())
@@ -97,6 +100,7 @@ where
 
     /// Adjusts the availability of a specific slot to a new quantity.
     fn adjust(&mut self, item_id: &Item::Id, from: Time, to: Time, new_quantity: u32) -> Result<(), InventoryError> {
+        validate_time_range(from, to)?;
         let slot = self.find_slot_mut(item_id, from, to).ok_or(InventoryError::NotFound)?;
         slot.available = new_quantity;
         Ok(())
@@ -114,6 +118,10 @@ where
     /// If any of the reservations fail (e.g., not found or insufficient quantity),
     /// the operation is aborted without modifying any slot.
     fn reserve_many(&mut self, item_id: &Item::Id, slots: &[(Time, Time, u32)]) -> Result<(), InventoryError> {
+        for (start, end, _) in slots {
+            validate_time_range(*start, *end)?;
+        }
+
         let storage = self
             .storage
             .get_mut(item_id)

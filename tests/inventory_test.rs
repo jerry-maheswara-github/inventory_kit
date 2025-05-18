@@ -23,7 +23,7 @@ mod tests {
         let mut repo = in_memory::InMemoryInventoryRepository::<HotelRoom, u32>::new();
 
         let room = HotelRoom { id: 1 };
-        repo.insert_availability(room.id(), 1000, 2000, 10);
+        let _ = repo.insert_availability(room.id(), 1000, 2000, 10);
 
         assert_eq!(
             repo.get_availability(&room.id(), 1000, 2000).unwrap()[0].available,
@@ -47,8 +47,8 @@ mod tests {
     fn test_atomic_reserve_success_and_fail() {
         let mut repo = in_memory::InMemoryInventoryRepository::<HotelRoom, u32>::new();
         let room_id = 1;
-        repo.insert_availability(room_id, 1000, 1100, 5);
-        repo.insert_availability(room_id, 1100, 1200, 3);
+        let _ = repo.insert_availability(room_id, 1000, 1100, 5);
+        let _ = repo.insert_availability(room_id, 1100, 1200, 3);
 
         let result = repo.reserve_many(&room_id, &[
             (1000, 1100, 2),
