@@ -10,7 +10,7 @@ use crate::utils::validate_time_range;
 ///
 /// This implementation stores inventory data in a `HashMap`, making it suitable for testing,
 /// prototyping, or simple use cases without the need for persistent storage.
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct InMemoryInventoryRepository<Item, Time>
 where
     Item: InventoryItem,
